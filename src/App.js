@@ -1,8 +1,4 @@
-<<<<<<< HEAD:naksha/src/App.js
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-
-import Header from './components/Header';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';import Header from './components/Header';
 import Map from './components/Map';
 import Alerts from './components/Alert';
 import Issues from './components/Issues'; 
@@ -27,20 +23,7 @@ function App() {
         </div>
       </div>
     </Router>
-=======
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-        <p>work</p>
-
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    </div>
->>>>>>> parent of 595f171 (Components initialized):src/App.js
-  );
+  )
 }
 
 export default App;
