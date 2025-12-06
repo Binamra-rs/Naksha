@@ -9,6 +9,7 @@ import {
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { saveMarkerToDB, fetchMarkersFromDB } from './MarkerService';
 
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -127,21 +128,14 @@ function ReportMarker({ unconfirmedMarker, setUnconfirmedMarker, setConfirmedMar
     };
 
     try {
-        // 💡 INTEGRATION POINT: Replace simulation with actual database call
-        // const result = await saveMarkerToDB(markerData); 
-
-        // --- SIMULATING FIREBASE WRITE ---
-        await new Promise(resolve => setTimeout(resolve, 1500)); 
-        const result = { success: true, id: "db-" + Date.now() }; 
-        // --- END SIMULATION ---
+        const result = await saveMarkerToDB(markerData);
 
         if (result.success) {
-            // Update local state with the new marker and the ID returned by Firestore
+            
             const finalMarker = { ...markerData, id: result.id }; 
             setConfirmedMarkers(prevMarkers => [...prevMarkers, finalMarker]);
         }
 
-        // Cleanup
         setUnconfirmedMarker(null); 
         startCooldown();
 
@@ -241,6 +235,30 @@ const CommunityMap = () => {
 
   const [canPlaceMarker, setCanPlaceMarker] = useState(true);
 
+  const pollIntervalRef = useRef(null);
+
+  const fetchMarkers = async () => {
+    try {
+      const markers = await fetchMarkersFromDB();
+      setConfirmedMarkers(markers);
+    } catch (error) {
+      console.error("Error polling markers:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMarkers();
+
+    pollIntervalRef.current = setInterval(() => {
+      fetchMarkers();
+    }, 3000);
+
+    return () => {
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+      }
+    };
+  }, []);
 
   const startCooldown = () => {
       setCanPlaceMarker(false);
@@ -252,7 +270,7 @@ const CommunityMap = () => {
   return (
     <MapContainer 
       center={[51.505, -0.09]} 
-      zoom={13} 
+      zoom={16} 
       style={{ height: "100vh", width: "100%" }}
     >
       <TileLayer
@@ -280,18 +298,24 @@ const CommunityMap = () => {
       )}
 
       {}
-      {confirmedMarkers.map((marker) => (
-        <Marker 
-            key={marker.id} 
-            position={marker.position} 
-            icon={createCustomIcon(marker.type)} // Use custom color icon
-        >
-          <Popup>
-            **{marker.type.toUpperCase()}** <br />
-            {marker.desc}
-          </Popup>
-        </Marker>
-      ))}
+      {confirmedMarkers.map((marker) => {
+        if (!marker.position || marker.position.lat === undefined || marker.position.lng === undefined) {
+          console.warn("Skipping marker with invalid coordinates:", marker);
+          return null;
+        }
+        return (
+          <Marker 
+              key={marker.id} 
+              position={[marker.position.lat, marker.position.lng]} 
+              icon={createCustomIcon(marker.type)} 
+          >
+            <Popup>
+              **{marker.type.toUpperCase()}** <br />
+              {marker.desc}
+            </Popup>
+          </Marker>
+        );
+      })}
 
     </MapContainer>
   );
@@ -299,7 +323,6 @@ const CommunityMap = () => {
 
 export default CommunityMap;
 
-// --- CSS Styles for Form (Inline Styling) ---
 const styles = {
     form: {
         display: 'flex',

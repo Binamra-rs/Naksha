@@ -1,18 +1,18 @@
 
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, Timestamp, getDocs } from "firebase/firestore";
 
-import { db } from './YOUR_FIREBASE_DB_PATH'; 
+import { db } from '../firebase'; 
 
 /**
- * * @param {object} markerData - Contains position, type, and desc.
- * @returns {object} - Object containing success status and the document ID.
+ * * @param {object} markerData 
+ * @returns {object} 
  */
 const saveMarkerToDB = async (markerData) => {
     try {
         const docRef = await addDoc(collection(db, "markers"), {
 
             lat: markerData.position.lat,
-            lng: markerData.position.lng,
+            long: markerData.position.lng,
 
 
             type: markerData.type,
@@ -31,4 +31,40 @@ const saveMarkerToDB = async (markerData) => {
     }
 };
 
-export { saveMarkerToDB };
+/**
+ * Fetch all markers from Firebase
+ * @returns {array} Array of markers with id and data
+ */
+const fetchMarkersFromDB = async () => {
+    try {
+        const querySnapshot = await getDocs(collection(db, "markers"));
+        const markers = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            console.log("Raw marker data from Firebase:", data); 
+            
+            const lng = data.long !== undefined ? data.long : data.lng;
+            
+            if (data.lat !== undefined && lng !== undefined) {
+                markers.push({
+                    id: doc.id,
+                    position: {
+                        lat: data.lat,
+                        lng: lng
+                    },
+                    type: data.type,
+                    desc: data.desc,
+                    timestamp: data.timestamp
+                });
+            } else {
+                console.warn("Marker missing coordinates:", data);
+            }
+        });
+        return markers;
+    } catch (e) {
+        console.error("Error fetching markers: ", e);
+        throw new Error("Database fetch failed: " + e.message);
+    }
+};
+
+export { saveMarkerToDB, fetchMarkersFromDB };
