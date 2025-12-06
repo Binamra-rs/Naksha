@@ -71,50 +71,40 @@ const StepIndicator = ({ step }) => (
 function FileComplaint() {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({});
-    const [file, setFile] = useState(null); // Separate state for file upload (handled outside this scope)
+    const [file, setFile] = useState(null); 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]); // Store the file object
+        setFile(e.target.files[0]); 
     };
 
     const nextStep = () => setStep(step + 1);
     const prevStep = () => setStep(step - 1);
     
-    // 2. Modify handleSubmit to interact with Firestore
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (step < 3) {
-            // Move to the next step
             nextStep();
             return;
         }
 
-        // --- SUBMIT LOGIC (Step 3) ---
-
         const complaintData = {
             ...formData,
-            // Add initial status and timestamp
             status: 'New', 
-            submittedAt: serverTimestamp(), // Use Firestore native timestamp
-            // Note: File handling (uploading to Storage and getting a URL) 
-            // is complex and usually done here, but is omitted for simplicity.
-            // We just note the attachment's filename for now.
+            submittedAt: serverTimestamp(), 
             attachmentName: file ? file.name : null, 
         };
 
         try {
             const docRef = await addDoc(collection(db, "complaints"), complaintData);
             
-            // Success
             alert(`Complaint Submitted! Document ID: ${docRef.id}`);
             console.log('Final Complaint Data:', complaintData);
 
-            // Reset form
             setStep(1); 
             setFormData({});
             setFile(null);
