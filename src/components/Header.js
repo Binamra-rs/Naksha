@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logo from './logo.png';
 
 const navStyle = {
   backgroundColor: '#ffffff', 
@@ -10,6 +11,18 @@ const navStyle = {
   position: 'sticky', 
   top: 0,
   zIndex: 100
+};
+
+const logoStyle = {
+  height: '40px',
+  marginRight: '30px',
+  display: 'flex',
+  alignItems: 'center'
+};
+
+const navContainerStyle = {
+  display: 'flex',
+  alignItems: 'center'
 };
 
 const linkStyle = {
@@ -34,7 +47,15 @@ const loginBtnStyle = {
 function Header() {
   return (
     <header style={navStyle}>
-      <nav>
+      <Link to="/map" style={{ textDecoration: 'none' }}>
+        <img 
+          src={logo} 
+          alt="Logo" 
+          style={logoStyle}
+        />
+      </Link>
+      
+      <nav style={navContainerStyle}>
         <Link to="/map" style={linkStyle}>Map</Link>
         <Link to="/alerts" style={linkStyle}>Alerts</Link>
         <Link to="/issues" style={linkStyle}>Issues</Link>
