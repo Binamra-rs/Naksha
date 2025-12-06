@@ -1,5 +1,3 @@
-// src/components/Issues.js
-
 import React, { useState, useEffect } from 'react';
 
 const issueContainerStyle = {
@@ -23,7 +21,6 @@ const selectStyle = {
   cursor: 'pointer',
 };
 
-// Use a simplified color palette (mostly gray/white with one accent)
 const ACCENT_COLOR = '#007bff'; 
 
 const issueCardStyle = (status) => ({
@@ -31,22 +28,20 @@ const issueCardStyle = (status) => ({
   backgroundColor: '#fff',
   borderRadius: '8px',
   boxShadow: '0 4px 10px rgba(0, 0, 0, 0.05)',
-  // Border color based on status (subdued version)
   borderLeft: `4px solid ${issueStatusColors[status] || '#adb5bd'}`, 
   display: 'flex',
   flexDirection: 'column',
 });
 
 const issueStatusColors = {
-  'In Review': '#ffc107',  // Soft Yellow/Orange
-  'Processing': ACCENT_COLOR, // Blue accent
-  'Closed': '#28a745',     // Soft Green
-  'New': '#dc3545',        // Soft Red
+  'In Review': '#ffc107',  
+  'Processing': ACCENT_COLOR,
+  'Closed': '#28a745',     
+  'New': '#dc3545',        
 };
 
 const IssueBadge = ({ status }) => (
   <span style={{
-    backgroundColor: issueStatusColors[status] || '#adb5bd', // Fallback to gray
     color: 'white',
     padding: '4px 8px',
     borderRadius: '4px',
@@ -57,7 +52,6 @@ const IssueBadge = ({ status }) => (
   </span>
 );
 
-// Mock data now simulates what would be loaded from an API
 const initialIssues = [
   { id: 1, title: 'Uncollected Trash ', category: 'Waste', status: 'In Review', date: '2025-12-04' },
   { id: 2, title: 'Pothole', category: 'Maintenance', status: 'New', date: '2025-12-06' },
@@ -80,7 +74,6 @@ function Issues() {
 
   const sortedIssues = [...issues].sort((a, b) => {
     if (sortBy === 'date') {
-      // Sort newest first
       return new Date(b.date) - new Date(a.date);
     }
     return 0; 
