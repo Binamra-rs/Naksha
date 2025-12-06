@@ -6,7 +6,7 @@ const formContainerStyle = {
   padding: '40px',
   backgroundColor: '#fff',
   borderRadius: '12px',
-  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0 8px 20px rgba(108, 97, 97, 0.1)',
 };
 
 const headerStyle = {

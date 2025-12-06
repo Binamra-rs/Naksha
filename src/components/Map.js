@@ -1,10 +1,9 @@
 import React from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css'; // <--- CRITICAL: Map looks broken without this
+import 'leaflet/dist/leaflet.css'; 
 
 const Map = () => {
   return (
-    // The container needs an explicit height, or the map won't show up.
     <MapContainer 
       center={[27.7172, 85.3240]} 
       zoom={20} 
