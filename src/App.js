@@ -1,14 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Import Components
+import Header from './components/Header';
+import Map from './components/Map';
+import Login from './components/Login';
 
 function App() {
   return (
-    <div className="App">
-        <p>work</p>
-
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    </div>
+    <Router>
+      <div className="App">
+        <Header />
+        
+        
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<Map />} /> 
+            <Route path="/map" element={<Map />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
